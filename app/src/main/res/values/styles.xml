@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base application theme. -->
+
+        <!-- Custom style for TextInputLayout -->
+        <style name="Custom_textinputlayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <!-- Change box stroke color based on focus -->
+            <item name="boxStrokeColor">@color/text_input_box_stroke</item>
+        </style>
+
+</resources>

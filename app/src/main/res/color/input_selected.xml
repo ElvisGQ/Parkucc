@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="#004588" android:state_hovered="true"/> <!-- Color when focused -->
+    <item android:color="#1E90FF"/> <!-- Default color -->
+</selector>

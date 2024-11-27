@@ -1,0 +1,8 @@
+<!-- res/drawable/edit_text_underline.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/white"/> <!-- Background color (optional) -->
+    <size android:height="1dp" /> <!-- The height of the underline -->
+    <stroke
+        android:color="@color/text_input_box_stroke"
+    android:width="2dp" /> <!-- Thickness of the underline -->
+</shape>

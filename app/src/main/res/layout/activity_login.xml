@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login"
+    android:background="@color/white">
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="412dp"
+        android:layout_height="456dp"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/blue_bg"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/icon_login"
+        android:layout_width="254dp"
+        android:layout_height="116dp"
+        android:layout_marginTop="56dp"
+        android:src="@drawable/carritomain"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="226dp"
+        android:layout_height="233dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="288dp"
+        android:layout_marginBottom="388dp"
+        android:src="@drawable/circle_login"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/i2"
+        android:layout_width="185dp"
+        android:layout_height="204dp"
+        android:layout_marginTop="188dp"
+        android:layout_marginEnd="316dp"
+        android:src="@drawable/circle_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="152dp"
+        android:fontFamily="@font/geologica_semibold"
+        android:text="PARKUCC"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="255dp"
+        android:layout_marginTop="264dp"
+        android:src="@drawable/bg_shape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="134dp"
+        android:layout_height="97dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="318dp"
+        android:fontFamily="@font/geologica_regular"
+        android:text="Iniciar"
+        android:textColor="#1E90FF"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="360dp"
+        android:fontFamily="@font/geologica_semibold"
+        android:text="SESIÓN"
+        android:textColor="#1E90FF"
+        android:textSize="41sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/login_btn_id"
+        android:layout_width="299dp"
+        android:layout_height="73dp"
+        android:background="@drawable/blue_button"
+        android:fontFamily="@font/geologica_medium"
+        android:stateListAnimator="@null"
+        android:text="Ingresar"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.812" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="@color/input_selected"
+        app:hintTextColor="#1E90FF"
+        app:cursorColor="@color/input_selected"
+        app:boxStrokeErrorColor="@color/input_selected"
+        app:boxBackgroundColor="@color/input_selected"
+        app:layout_constraintVertical_bias="0.532"
+        >
+
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_width="310dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/input_selected"
+            android:hint="Correo"
+            android:inputType="textEmailAddress"
+            android:fontFamily="@font/geologica_medium"
+            android:textColor="@android:color/black"
+            app:hintTextColor="@android:color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="@color/input_selected"
+        app:hintTextColor="#1E90FF"
+        app:cursorColor="@color/input_selected"
+        app:boxStrokeErrorColor="@color/input_selected"
+        app:boxBackgroundColor="@color/input_selected"
+        app:layout_constraintVertical_bias="0.633">
+
+        <EditText
+            android:layout_width="310dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/input_selected"
+            android:fontFamily="@font/geologica_medium"
+            android:hint="Contraseña"
+            android:id="@+id/password_input"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black"
+            app:hintTextColor="@android:color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/reset_password_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/geologica_regular"
+        android:text="¿Olvidó su contraseña?"
+        android:textColor="#1E90FF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.783"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+        app:layout_constraintVertical_bias="0.054" />
+
+    <TextView
+        android:id="@+id/sign_up_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/geologica_regular"
+        android:text="Regístrate"
+        android:textColor="#1E90FF"
+        android:textSize="18sp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn_id"
+        app:layout_constraintVertical_bias="0.311" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
