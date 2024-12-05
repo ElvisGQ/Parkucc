@@ -13,12 +13,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.parkucc.OkHttpHelper;
 import com.example.parkucc.R;
-import com.example.parkucc.databinding.FragmentHomeBinding;
+import com.example.parkucc.databinding.FragmentParkingSectionB7Binding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,66 +32,60 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class HomeFragment extends Fragment {
+public class ParkingSectionB7 extends Fragment {
 
-    private FragmentHomeBinding binding;
+    private FragmentParkingSectionB7Binding binding;
     private int availableSpaces = 0;
     private Button[] buttons;
     private ImageView[] cars;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentParkingSectionB7Binding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         availableSpaces = 0;
 
-        Button refresh = binding.refresh;
-        TextView espacios_libres = binding.espaciosLibres;
-
         // Navegación entre secciones
-        ImageView flechaSeccionA1haciaA2 = binding.flechaSeccionA1haciaA2;
-        flechaSeccionA1haciaA2.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_parkingSectionA2)
-        );
-        ImageView flechaSeccionA1haciaB1 = binding.flechaSeccionA1haciaB1;
-        flechaSeccionA1haciaB1.setOnClickListener(v ->
-                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_parkingSectionB1)
+        ImageView flechaSeccionB7haciaB6 = binding.flechaSeccionB7haciaC2;
+        flechaSeccionB7haciaB6.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_parkingSectionB7_to_parkingSectionC2)
         );
 
-        // Inicializar botones y carros
+        ImageView flechaSeccionB7haciaB8 = binding.flechaSeccionB7haciaB8;
+        flechaSeccionB7haciaB8.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_parkingSectionB7_to_parkingSectionB8)
+        );
+
+        // Inicializar botones y carros para los espacios 81 al 90 excepto 82
         buttons = new Button[]{
-                binding.buttonCar1, binding.buttonCar2, binding.buttonCar3,
-                binding.buttonCar4, binding.buttonCar5, binding.buttonCar6,
-                binding.buttonCar7, binding.buttonCar8, binding.buttonCar9,
-                binding.buttonCar10
+                binding.buttonCar81, binding.buttonCar83, binding.buttonCar84,
+                binding.buttonCar85, binding.buttonCar86, binding.buttonCar87,
+                binding.buttonCar88, binding.buttonCar89, binding.buttonCar90
         };
 
         cars = new ImageView[]{
-                binding.car1, binding.car2, binding.car3, binding.car4,
-                binding.car5, binding.car6, binding.car7, binding.car8,
-                binding.car9, binding.car10
+                binding.car81, binding.car83, binding.car84,
+                binding.car85, binding.car86, binding.car87, binding.car88,
+                binding.car89, binding.car90
         };
 
         OkHttpHelper httpHelper = new OkHttpHelper();
 
-        // Obtener datos y actualizar UI
-        fetchParkingData(httpHelper, espacios_libres);
+        // Obtener datos del servidor y actualizar la interfaz
+        fetchParkingData(httpHelper);
 
-        // Botón para recargar los datos
-        refresh.setOnClickListener(view -> fetchParkingData(httpHelper, espacios_libres));
+        // Listener para recargar los datos
+        binding.refresh.setOnClickListener(view -> fetchParkingData(httpHelper));
 
-        // Asignar listeners a los botones
+        // Listener para los botones
         View.OnClickListener buttonClickListener = v -> {
             for (int i = 0; i < buttons.length; i++) {
                 if (v.getId() == buttons[i].getId()) {
                     if (cars[i].getVisibility() == View.VISIBLE) {
                         Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
                     } else {
-                        String carInfo = "A" + (i + 1);
+                        String carInfo = "B" + getCarNumber(i);
                         showPopup(carInfo);
                     }
                     break;
@@ -107,7 +100,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void fetchParkingData(OkHttpHelper httpHelper, TextView espacios_libres) {
+    private void fetchParkingData(OkHttpHelper httpHelper) {
         httpHelper.get("http://157.230.232.203/espacios", new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -125,35 +118,37 @@ public class HomeFragment extends Fragment {
                     try {
                         JSONArray jsonArray = new JSONArray(responseBody);
                         requireActivity().runOnUiThread(() -> {
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                try {
-                                    JSONObject espacioObject = jsonArray.getJSONObject(i);
-                                    int idEspacio = espacioObject.getInt("id_espacio");
-                                    String disponibilidad = espacioObject.getString("disponibilidad");
+                            if (binding != null) { // Evita NullPointerException
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    try {
+                                        JSONObject espacioObject = jsonArray.getJSONObject(i);
+                                        int idEspacio = espacioObject.getInt("id_espacio");
+                                        String disponibilidad = espacioObject.getString("disponibilidad");
 
-                                    if (idEspacio >= 1 && idEspacio <= 10) {
-                                        int index = idEspacio - 1;
-                                        if ("Disponible".equals(disponibilidad)) {
-                                            availableSpaces++;
-                                            cars[index].setVisibility(View.INVISIBLE);
-                                            buttons[index].setEnabled(true);
-                                            buttons[index].setAlpha(0.0f); // Botón invisible
-                                        } else if ("Ocupado".equals(disponibilidad)) {
-                                            cars[index].setVisibility(View.VISIBLE);
-                                            buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.0f); // Botón invisible
-                                        } else if ("Reservado".equals(disponibilidad)) {
-                                            cars[index].setVisibility(View.INVISIBLE);
-                                            buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.5f); // Botón semitransparente
+                                        int index = getCarIndex(idEspacio);
+                                        if (index != -1) {
+                                            if ("Disponible".equals(disponibilidad)) {
+                                                availableSpaces++;
+                                                cars[index].setVisibility(View.INVISIBLE);
+                                                buttons[index].setEnabled(true);
+                                                buttons[index].setAlpha(0.0f); // Botón invisible
+                                            } else if ("Ocupado".equals(disponibilidad)) {
+                                                cars[index].setVisibility(View.VISIBLE);
+                                                buttons[index].setEnabled(false);
+                                                buttons[index].setAlpha(0.0f); // Botón invisible
+                                            } else if ("Reservado".equals(disponibilidad)) {
+                                                cars[index].setVisibility(View.INVISIBLE);
+                                                buttons[index].setEnabled(false);
+                                                buttons[index].setAlpha(0.5f); // Botón semitransparente
+                                            }
                                         }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
                                 }
-                            }
 
-                            espacios_libres.setText(availableSpaces + " ESPACIOS LIBRES");
+                                binding.espaciosLibres.setText(availableSpaces + " ESPACIOS LIBRES");
+                            }
                         });
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -187,9 +182,9 @@ public class HomeFragment extends Fragment {
         closeButton.setOnClickListener(v -> popupWindow.dismiss());
 
         reserveButton.setOnClickListener(v -> {
-            String espacio = carInfo.replaceAll("[^\\d]", "");
-            String nombre = "UsuarioDemo";
-            String fechaFin = getCurrentDateTimePlus30Minutes();
+            String espacio = carInfo.replaceAll("[^\\d]", ""); // Quitar caracteres no numéricos
+            String nombre = "UsuarioDemo"; // Aquí se usa el nombre del usuario
+            String fechaFin = getCurrentDateTimePlus30Minutes(); // Fecha +30 minutos
 
             makeReservation(espacio, nombre, fechaFin, popupWindow);
         });
@@ -211,9 +206,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
-                });
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show());
             }
 
             @Override
@@ -230,12 +224,13 @@ public class HomeFragment extends Fragment {
                             if (status == 200) {
                                 Toast.makeText(requireContext(), "Reservación exitosa", Toast.LENGTH_SHORT).show();
                                 popupWindow.dismiss();
-                                // Cambiar opacidad del botón
-                                int index = Integer.parseInt(espacio) - 1;
-                                buttons[index].setAlpha(0.5f);
-                                buttons[index].setEnabled(false);
+                                int index = getCarIndex(Integer.parseInt(espacio));
+                                if (index != -1) {
+                                    buttons[index].setAlpha(0.5f);
+                                    buttons[index].setEnabled(false);
+                                }
                             } else if (status == 409) {
-                                Toast.makeText(requireContext(), "Espacio ocupado en el tiempo especificado", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Espacio ocupado", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(requireContext(), "Error al reservar", Toast.LENGTH_SHORT).show();
                             }
@@ -245,9 +240,8 @@ public class HomeFragment extends Fragment {
                     }
                 } else {
                     response.close();
-                    requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Error del servidor", Toast.LENGTH_SHORT).show();
-                    });
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(requireContext(), "Error del servidor", Toast.LENGTH_SHORT).show());
                 }
             }
         });
@@ -256,8 +250,23 @@ public class HomeFragment extends Fragment {
     private String getCurrentDateTimePlus30Minutes() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 30);
+        calendar.add(Calendar.MINUTE, 30); // Agregar 30 minutos
         return sdf.format(calendar.getTime());
+    }
+
+    private int getCarIndex(int idEspacio) {
+        // Excluir espacios fuera del rango o el 82
+        if (idEspacio < 81 || idEspacio > 90 || idEspacio == 82) return -1;
+
+        if (idEspacio == 81) return 0;
+        else if (idEspacio >= 83 && idEspacio <= 90) return idEspacio - 82;
+        else return -1;
+    }
+
+    private int getCarNumber(int index) {
+        if (index == 0) return 81;
+        else if (index >= 1 && index <= 8) return index + 82;
+        else return -1;
     }
 
     @Override

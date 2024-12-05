@@ -4,13 +4,179 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
+    <!-- Fragmentos/Secciones del estacionamiento-->
 
+    <!-- SECCIONES A1 Y A2 -->
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.parkucc.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+    <action
+        android:id="@+id/action_homeFragment_to_parkingSectionA2"
+        app:destination="@id/nav_parking_sectiona2" />
+        <action
+            android:id="@+id/action_homeFragment_to_parkingSectionB1"
+            app:destination="@id/nav_parking_sectionb1" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/nav_parking_sectiona2"
+        android:name="com.example.parkucc.ui.home.ParkingSectionA2"
+        android:label="Sección de Estacionamiento"
+        tools:layout="@layout/fragment_parking_section_a2">
+        <action
+            android:id="@+id/action_parkingSectionA2_to_homeFragment"
+            app:destination="@id/navigation_home" />
+</fragment>
+    <!-- FIN SECCIONES A1 Y A2 -->
+    <!-- SECCIONES B1 - B8 -->
+    <fragment
+        android:id="@+id/nav_parking_sectionb1"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB1"
+        android:label="Sección de Estacionamiento B1"
+        tools:layout="@layout/fragment_parking_section_b1">
+    <action
+        android:id="@+id/action_parkingSectionB1_to_homeFragment"
+        app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_parkingSectionB1_to_parkingSectionB2"
+            app:destination="@id/nav_parking_sectionb2" />
+</fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionb2"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB2"
+        android:label="Sección de Estacionamiento B2"
+        tools:layout="@layout/fragment_parking_section_b2">
+        <action
+            android:id="@+id/action_parkingSectionB2_to_parkingSectionB1"
+            app:destination="@id/nav_parking_sectionb1" />
+        <action
+            android:id="@+id/action_parkingSectionB2_to_parkingSectionB3"
+            app:destination="@id/nav_parking_sectionb3" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionb3"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB3"
+        android:label="Sección de Estacionamiento B3"
+        tools:layout="@layout/fragment_parking_section_b3">
+    <action
+        android:id="@+id/action_parkingSectionB3_to_parkingSectionB2"
+        app:destination="@id/nav_parking_sectionb2" />
+    <action
+        android:id="@+id/action_parkingSectionB3_to_parkingSectionB4"
+        app:destination="@id/nav_parking_sectionb4" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionb4"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB4"
+        android:label="Sección de Estacionamiento B4"
+        tools:layout="@layout/fragment_parking_section_b4">
+        <action
+            android:id="@+id/action_parkingSectionB4_to_parkingSectionB3"
+            app:destination="@id/nav_parking_sectionb3" />
+        <action
+            android:id="@+id/action_parkingSectionB4_to_parkingSectionB5"
+            app:destination="@id/nav_parking_sectionb5" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionb5"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB5"
+        android:label="Sección de Estacionamiento B5"
+        tools:layout="@layout/fragment_parking_section_b5">
+        <action
+            android:id="@+id/action_parkingSectionB5_to_parkingSectionB4"
+            app:destination="@id/nav_parking_sectionb4" />
+        <action
+            android:id="@+id/action_parkingSectionB5_to_parkingSectionB6"
+            app:destination="@id/nav_parking_sectionb6" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionb6"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB6"
+        android:label="Sección de Estacionamiento B6"
+        tools:layout="@layout/fragment_parking_section_b6">
+        <action
+            android:id="@+id/action_parkingSectionB6_to_parkingSectionB5"
+            app:destination="@id/nav_parking_sectionb5" />
+        <action
+            android:id="@+id/action_parkingSectionB6_to_parkingSectionB7"
+            app:destination="@id/nav_parking_sectionb7" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionb7"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB7"
+        android:label="Sección de Estacionamiento B7"
+        tools:layout="@layout/fragment_parking_section_b7">
+        <action
+            android:id="@+id/action_parkingSectionB7_to_parkingSectionC2"
+            app:destination="@id/nav_parking_sectionc2" />
+        <action
+            android:id="@+id/action_parkingSectionB7_to_parkingSectionB8"
+            app:destination="@id/nav_parking_sectionb8" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionb8"
+        android:name="com.example.parkucc.ui.home.ParkingSectionB8"
+        android:label="Sección de Estacionamiento B8"
+        tools:layout="@layout/fragment_parking_section_b8">
+        <action
+            android:id="@+id/action_parkingSectionB8_to_parkingSectionB7"
+            app:destination="@id/nav_parking_sectionb7" />
+        <action
+            android:id="@+id/action_parkingSectionB8_to_parkingSectionC1"
+            app:destination="@id/nav_parking_sectionc1" />
+    </fragment>
+    <!-- FIN SECCIONES B1 Y B8 -->
+    <!-- SECCIONES C1 - C4 -->
+
+    <fragment
+        android:id="@+id/nav_parking_sectionc1"
+        android:name="com.example.parkucc.ui.home.ParkingSectionC1"
+        android:label="Sección de Estacionamiento C1"
+        tools:layout="@layout/fragment_parking_section_c1">
+        <action
+            android:id="@+id/action_parkingSectionC1_to_parkingSectionB8"
+            app:destination="@id/nav_parking_sectionb8" />
+        <action
+            android:id="@+id/action_parkingSectionC1_to_parkingSectionC2"
+            app:destination="@id/nav_parking_sectionc2" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionc2"
+        android:name="com.example.parkucc.ui.home.ParkingSectionC2"
+        android:label="Sección de Estacionamiento C2"
+        tools:layout="@layout/fragment_parking_section_c2">
+        <action
+            android:id="@+id/action_parkingSectionC2_to_parkingSectionC1"
+            app:destination="@id/nav_parking_sectionc1" />
+        <action
+            android:id="@+id/action_parkingSectionC2_to_parkingSectionC3"
+            app:destination="@id/nav_parking_sectionc3" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionc3"
+        android:name="com.example.parkucc.ui.home.ParkingSectionC3"
+        android:label="Sección de Estacionamiento C3"
+        tools:layout="@layout/fragment_parking_section_c3">
+        <action
+            android:id="@+id/action_parkingSectionC3_to_parkingSectionC2"
+            app:destination="@id/nav_parking_sectionc2" />
+        <action
+            android:id="@+id/action_parkingSectionC3_to_parkingSectionC4"
+            app:destination="@id/nav_parking_sectionc4" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_parking_sectionc4"
+        android:name="com.example.parkucc.ui.home.ParkingSectionC4"
+        android:label="Sección de Estacionamiento C4"
+        tools:layout="@layout/fragment_parking_section_c4">
+        <action
+            android:id="@+id/action_parkingSectionC4_to_parkingSectionC3"
+            app:destination="@id/nav_parking_sectionc3" />
+    </fragment>
+    <!-- FIN SECCIONES C1 Y C4 -->
+<!-- ********************************************************************** -->
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.parkucc.ui.dashboard.DashboardFragment"

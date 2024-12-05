@@ -36,7 +36,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/parking_lot_a1"
+        android:background="@drawable/parking_lot_b6"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,10 +98,10 @@
         app:layout_constraintVertical_bias="0.253" />
 
     <ImageView
-        android:rotation="150"
+        android:rotation="210"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car1"
+        android:id="@+id/car79"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:background="@drawable/car"
@@ -110,24 +110,24 @@
         app:layout_constraintEnd_toEndOf="@+id/holder1"
         app:layout_constraintStart_toStartOf="@+id/holder1"
         app:layout_constraintTop_toBottomOf="@+id/holder1"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="0.1" />
     <Button
-        android:rotation="150"
+        android:rotation="210"
         android:alpha="0.0"
+        android:id="@+id/button_car79"
         android:background="@drawable/button_reserved"
-        android:id="@+id/button_car1"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car1"
-        app:layout_constraintEnd_toEndOf="@+id/car1"
-        app:layout_constraintStart_toStartOf="@+id/car1"
-        app:layout_constraintTop_toTopOf="@+id/car1" />
+        app:layout_constraintBottom_toBottomOf="@+id/car79"
+        app:layout_constraintEnd_toEndOf="@+id/car79"
+        app:layout_constraintStart_toStartOf="@+id/car79"
+        app:layout_constraintTop_toTopOf="@+id/car79" />
 
     <ImageView
-        android:rotation="150"
+        android:rotation="210"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car3"
+        android:id="@+id/car77"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:layout_marginTop="4dp"
@@ -137,24 +137,24 @@
         app:layout_constraintEnd_toEndOf="@+id/holder1"
         app:layout_constraintStart_toStartOf="@+id/holder1"
         app:layout_constraintTop_toBottomOf="@+id/holder1"
-        app:layout_constraintVertical_bias="0.152"/>
+        app:layout_constraintVertical_bias="0.21"/>
     <Button
-        android:rotation="150"
+        android:rotation="210"
         android:alpha="0.0"
+        android:id="@+id/button_car77"
         android:background="@drawable/button_reserved"
-        android:id="@+id/button_car3"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car3"
-        app:layout_constraintEnd_toEndOf="@+id/car3"
-        app:layout_constraintStart_toStartOf="@+id/car3"
-        app:layout_constraintTop_toTopOf="@+id/car3" />
+        app:layout_constraintBottom_toBottomOf="@+id/car77"
+        app:layout_constraintEnd_toEndOf="@+id/car77"
+        app:layout_constraintStart_toStartOf="@+id/car77"
+        app:layout_constraintTop_toTopOf="@+id/car77" />
 
     <ImageView
-        android:rotation="150"
+        android:rotation="210"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car5"
+        android:id="@+id/car75"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:layout_marginTop="92dp"
@@ -164,24 +164,24 @@
         app:layout_constraintEnd_toEndOf="@+id/holder1"
         app:layout_constraintStart_toStartOf="@+id/holder1"
         app:layout_constraintTop_toBottomOf="@+id/holder1"
-        app:layout_constraintVertical_bias="0.18" />
+        app:layout_constraintVertical_bias="0.21" />
     <Button
-        android:rotation="150"
+        android:rotation="210"
         android:alpha="0.0"
-        android:id="@+id/button_car5"
+        android:id="@+id/button_car75"
         android:background="@drawable/button_reserved"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car5"
-        app:layout_constraintEnd_toEndOf="@+id/car5"
-        app:layout_constraintStart_toStartOf="@+id/car5"
-        app:layout_constraintTop_toTopOf="@+id/car5" />
+        app:layout_constraintBottom_toBottomOf="@+id/car75"
+        app:layout_constraintEnd_toEndOf="@+id/car75"
+        app:layout_constraintStart_toStartOf="@+id/car75"
+        app:layout_constraintTop_toTopOf="@+id/car75" />
 
     <ImageView
-        android:rotation="150"
+        android:rotation="210"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car7"
+        android:id="@+id/car73"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:layout_marginTop="176dp"
@@ -193,22 +193,22 @@
         app:layout_constraintTop_toBottomOf="@+id/holder1"
         app:layout_constraintVertical_bias="0.235" />
     <Button
-        android:rotation="150"
+        android:rotation="210"
         android:alpha="0.0"
-        android:id="@+id/button_car7"
+        android:id="@+id/button_car73"
         android:background="@drawable/button_reserved"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car7"
-        app:layout_constraintEnd_toEndOf="@+id/car7"
-        app:layout_constraintStart_toStartOf="@+id/car7"
-        app:layout_constraintTop_toTopOf="@+id/car7" />
+        app:layout_constraintBottom_toBottomOf="@+id/car73"
+        app:layout_constraintEnd_toEndOf="@+id/car73"
+        app:layout_constraintStart_toStartOf="@+id/car73"
+        app:layout_constraintTop_toTopOf="@+id/car73" />
 
     <ImageView
-        android:rotation="150"
+        android:rotation="210"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car9"
+        android:id="@+id/car71"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:layout_marginTop="264dp"
@@ -218,23 +218,47 @@
         app:layout_constraintEnd_toEndOf="@+id/holder1"
         app:layout_constraintStart_toStartOf="@+id/holder1"
         app:layout_constraintTop_toBottomOf="@+id/holder1"
-        app:layout_constraintVertical_bias="0.20" />
+        app:layout_constraintVertical_bias="0.28" />
+    <Button
+        android:rotation="210"
+        android:alpha="0.0"
+        android:id="@+id/button_car71"
+        android:background="@drawable/button_reserved"
+        android:layout_width="80dp"
+        android:layout_height="54dp"
+        app:layout_constraintBottom_toBottomOf="@+id/car71"
+        app:layout_constraintEnd_toEndOf="@+id/car71"
+        app:layout_constraintStart_toStartOf="@+id/car71"
+        app:layout_constraintTop_toTopOf="@+id/car71" />
+    <ImageView
+        android:rotation="150"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="-0.1"
+        android:id="@+id/car80"
+        android:layout_width="110dp"
+        android:layout_height="84dp"
+        android:background="@drawable/car"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/holder2"
+        app:layout_constraintStart_toStartOf="@+id/holder2"
+        app:layout_constraintTop_toBottomOf="@+id/holder2"
+        app:layout_constraintVertical_bias="0.1" />
     <Button
         android:rotation="150"
         android:alpha="0.0"
-        android:id="@+id/button_car9"
+        android:id="@+id/button_car80"
         android:background="@drawable/button_reserved"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car9"
-        app:layout_constraintEnd_toEndOf="@+id/car9"
-        app:layout_constraintStart_toStartOf="@+id/car9"
-        app:layout_constraintTop_toTopOf="@+id/car9" />
+        app:layout_constraintBottom_toBottomOf="@+id/car80"
+        app:layout_constraintEnd_toEndOf="@+id/car80"
+        app:layout_constraintStart_toStartOf="@+id/car80"
+        app:layout_constraintTop_toTopOf="@+id/car80" />
     <ImageView
-        android:rotation="210"
+        android:rotation="150"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car2"
+        android:id="@+id/car78"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:background="@drawable/car"
@@ -242,47 +266,23 @@
         app:layout_constraintEnd_toEndOf="@+id/holder2"
         app:layout_constraintStart_toStartOf="@+id/holder2"
         app:layout_constraintTop_toBottomOf="@+id/holder2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.23" />
     <Button
-        android:rotation="210"
+        android:rotation="150"
         android:alpha="0.0"
-        android:id="@+id/button_car2"
+        android:id="@+id/button_car78"
         android:background="@drawable/button_reserved"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car2"
-        app:layout_constraintEnd_toEndOf="@+id/car2"
-        app:layout_constraintStart_toStartOf="@+id/car2"
-        app:layout_constraintTop_toTopOf="@+id/car2" />
+        app:layout_constraintBottom_toBottomOf="@+id/car78"
+        app:layout_constraintEnd_toEndOf="@+id/car78"
+        app:layout_constraintStart_toStartOf="@+id/car78"
+        app:layout_constraintTop_toTopOf="@+id/car78" />
     <ImageView
-        android:rotation="210"
+        android:rotation="150"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car4"
-        android:layout_width="110dp"
-        android:layout_height="84dp"
-        android:background="@drawable/car"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/holder2"
-        app:layout_constraintStart_toStartOf="@+id/holder2"
-        app:layout_constraintTop_toBottomOf="@+id/holder2"
-        app:layout_constraintVertical_bias="0.152" />
-    <Button
-        android:rotation="210"
-        android:alpha="0.0"
-        android:id="@+id/button_car4"
-        android:background="@drawable/button_reserved"
-        android:layout_width="80dp"
-        android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car4"
-        app:layout_constraintEnd_toEndOf="@+id/car4"
-        app:layout_constraintStart_toStartOf="@+id/car4"
-        app:layout_constraintTop_toTopOf="@+id/car4" />
-    <ImageView
-        android:rotation="210"
-        android:visibility="gone"
-        app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car6"
+        android:id="@+id/car76"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:layout_marginTop="92dp"
@@ -291,48 +291,49 @@
         app:layout_constraintEnd_toEndOf="@+id/holder2"
         app:layout_constraintStart_toStartOf="@+id/holder2"
         app:layout_constraintTop_toBottomOf="@+id/holder2"
-        app:layout_constraintVertical_bias="0.18" />
+        app:layout_constraintVertical_bias="0.22" />
     <Button
-        android:rotation="210"
+        android:rotation="150"
         android:alpha="0.0"
-        android:id="@+id/button_car6"
+        android:id="@+id/button_car76"
         android:background="@drawable/button_reserved"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car6"
-        app:layout_constraintEnd_toEndOf="@+id/car6"
-        app:layout_constraintStart_toStartOf="@+id/car6"
-        app:layout_constraintTop_toTopOf="@+id/car6" />
+        app:layout_constraintBottom_toBottomOf="@+id/car76"
+        app:layout_constraintEnd_toEndOf="@+id/car76"
+        app:layout_constraintStart_toStartOf="@+id/car76"
+        app:layout_constraintTop_toTopOf="@+id/car76" />
     <ImageView
-        android:rotation="210"
+        android:rotation="150"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car8"
+        android:id="@+id/car74"
         android:layout_width="110dp"
         android:layout_height="84dp"
-        android:layout_marginTop="176dp"
+        android:layout_marginTop="92dp"
         android:background="@drawable/car"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/holder2"
         app:layout_constraintStart_toStartOf="@+id/holder2"
         app:layout_constraintTop_toBottomOf="@+id/holder2"
-        app:layout_constraintVertical_bias="0.235" />
+        app:layout_constraintVertical_bias="0.37" />
     <Button
-        android:rotation="210"
+        android:rotation="150"
         android:alpha="0.0"
-        android:id="@+id/button_car8"
+        android:id="@+id/button_car74"
         android:background="@drawable/button_reserved"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car8"
-        app:layout_constraintEnd_toEndOf="@+id/car8"
-        app:layout_constraintStart_toStartOf="@+id/car8"
-        app:layout_constraintTop_toTopOf="@+id/car8" />
+        app:layout_constraintBottom_toBottomOf="@+id/car74"
+        app:layout_constraintEnd_toEndOf="@+id/car74"
+        app:layout_constraintStart_toStartOf="@+id/car74"
+        app:layout_constraintTop_toTopOf="@+id/car74" />
+
     <ImageView
-        android:rotation="210"
+        android:rotation="150"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="-0.1"
-        android:id="@+id/car10"
+        android:id="@+id/car72"
         android:layout_width="110dp"
         android:layout_height="84dp"
         android:layout_marginTop="264dp"
@@ -341,18 +342,18 @@
         app:layout_constraintEnd_toEndOf="@+id/holder2"
         app:layout_constraintStart_toStartOf="@+id/holder2"
         app:layout_constraintTop_toBottomOf="@+id/holder2"
-        app:layout_constraintVertical_bias="0.20" />
+        app:layout_constraintVertical_bias="0.28" />
     <Button
-        android:rotation="210"
+        android:rotation="150"
         android:alpha="0.0"
-        android:id="@+id/button_car10"
+        android:id="@+id/button_car72"
         android:background="@drawable/button_reserved"
         android:layout_width="80dp"
         android:layout_height="54dp"
-        app:layout_constraintBottom_toBottomOf="@+id/car10"
-        app:layout_constraintEnd_toEndOf="@+id/car10"
-        app:layout_constraintStart_toStartOf="@+id/car10"
-        app:layout_constraintTop_toTopOf="@+id/car10" />
+        app:layout_constraintBottom_toBottomOf="@+id/car72"
+        app:layout_constraintEnd_toEndOf="@+id/car72"
+        app:layout_constraintStart_toStartOf="@+id/car72"
+        app:layout_constraintTop_toTopOf="@+id/car72" />
     <Button
         android:drawableRight="@drawable/refresh"
         android:paddingEnd="20dp"
@@ -375,7 +376,7 @@
         app:layout_constraintVertical_bias="0.207" />
 
     <ImageView
-        android:id="@+id/flechaSeccionA1haciaA2"
+        android:id="@+id/flechaSeccionB6haciaB5"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="Flecha para la siguiente sección"
@@ -388,7 +389,7 @@
         android:rotation="180"
         tools:layout_editor_absoluteY="526dp" />
     <ImageView
-        android:id="@+id/flechaSeccionA1haciaB1"
+        android:id="@+id/flechaSeccionB6haciaB7"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="Flecha para la siguiente sección"

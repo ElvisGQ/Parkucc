@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (isLoggedIn) {
-            Intent intent = new Intent(Login.this,NavBarActivity.class);
+            Intent intent = new Intent(Login.this, NavBarActivity.class);
             startActivity(intent);
             finish();
         }
@@ -95,7 +95,7 @@ public class Login extends AppCompatActivity {
                     mToast.setView(layout); // Set the custom layout as the Toast view
                     mToast.show();
 
-                }else{
+                } else {
 
                     OkHttpHelper httpHelper = new OkHttpHelper();
 
@@ -150,9 +150,7 @@ public class Login extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
-                                }
-
-                                else {
+                                } else {
 
                                     runOnUiThread(() -> showToast("Error de conexión"));
                                 }
@@ -189,7 +187,7 @@ public class Login extends AppCompatActivity {
 
                     });
 
-                };
+                }
 
             }
         });
