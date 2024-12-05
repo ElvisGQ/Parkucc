@@ -118,47 +118,53 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             if (response.isSuccessful()) {
-
-                                int statusCode = response.code();
                                 String responseBody = response.body().string();
 
-                                if (statusCode == 200) {
+                                try {
+                                    JSONObject jsonResponse = new JSONObject(responseBody);
+                                    int status = jsonResponse.getInt("status");
 
-                                    try {
-                                        JSONObject jsonResponse = new JSONObject(responseBody);
-                                        int status = jsonResponse.getInt("status");
+                                    if (status == 200) {
+                                        // Extract the user object
+                                        JSONObject user = jsonResponse.getJSONObject("user");
 
-                                        if (status == 200) {
+                                        String userRole = "";
 
-                                            SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                                            editor.putBoolean("isLoggedIn", true); // Example key-value
-                                            editor.putString("userEmail", email); // Store user ID
-                                            editor.apply(); // Save changes
+                                        switch (user.getInt("id_rol")){
 
-                                            Intent intent = new Intent(Login.this, LoadingLogin.class);
-                                            startActivity(intent);
-                                            finish();
+                                            case 1: userRole = "Estudiante"; break;
+                                            case 2: userRole = "Guardia"; break;
+                                            case 3: userRole = "Visitante"; break;
+                                            case 4: userRole = "Admin"; break;
 
-                                        } else if (status == 401) {
-                                            runOnUiThread(() -> showToast("Credenciales incorrectas"));
-                                        } else if (status == 404) {
-                                            runOnUiThread(() -> showToast("Cuenta no extistente"));
                                         }
 
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                        // Save user data to SharedPreferences
+                                        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putBoolean("isLoggedIn", true);
+                                        editor.putString("userEmail", user.getString("correo"));
+                                        editor.putString("userName", user.getString("nombre"));
+                                        editor.putString("userRole", userRole);
+                                        editor.apply(); // Save changes
+
+
+                                        // Navigate to another activity
+                                        Intent intent = new Intent(Login.this, LoadingLogin.class);
+                                        startActivity(intent);
+                                        finish();
+
+                                    } else if (status == 401) {
+                                        runOnUiThread(() -> showToast("Credenciales incorrectas"));
+                                    } else if (status == 404) {
+                                        runOnUiThread(() -> showToast("Cuenta no extistente"));
                                     }
-
-                                } else {
-
-                                    runOnUiThread(() -> showToast("Error de conexión"));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    response.close();
                                 }
-
-                                response.close();
-
                             } else {
-
                                 runOnUiThread(() -> showToast("No hay conexión."));
                             }
                         }
