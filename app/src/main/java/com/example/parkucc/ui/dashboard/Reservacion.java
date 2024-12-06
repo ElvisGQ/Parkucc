@@ -15,23 +15,9 @@ public class Reservacion {
         this.fechaFin = fechaFin;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getEspacio() {
-        return espacio;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public String getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public String getFechaFin() {
-        return fechaFin;
-    }
+    public String getId() { return id; }
+    public String getEspacio() { return espacio; }
+    public String getNombreUsuario() { return nombreUsuario; }
+    public String getFechaInicio() { return fechaInicio; }
+    public String getFechaFin() { return fechaFin; }
 }

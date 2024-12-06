@@ -13,17 +13,20 @@ import com.example.parkucc.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+
 public class ReservacionAdapter extends RecyclerView.Adapter<ReservacionAdapter.ReservacionViewHolder> {
 
     private List<Reservacion> reservaciones;
 
     public ReservacionAdapter(List<Reservacion> reservaciones) {
         this.reservaciones = reservaciones;
-    }
-
-    public void updateReservaciones(List<Reservacion> newReservaciones) {
-        this.reservaciones = newReservaciones;
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -48,10 +51,10 @@ public class ReservacionAdapter extends RecyclerView.Adapter<ReservacionAdapter.
         return reservaciones.size();
     }
 
-    static class ReservacionViewHolder extends RecyclerView.ViewHolder {
+    public static class ReservacionViewHolder extends RecyclerView.ViewHolder {
         TextView tvEspacio, tvNombreUsuario, tvFechaInicio, tvFechaFin;
 
-        ReservacionViewHolder(View itemView) {
+        public ReservacionViewHolder(@NonNull View itemView) {
             super(itemView);
             tvEspacio = itemView.findViewById(R.id.tvEspacio);
             tvNombreUsuario = itemView.findViewById(R.id.tvNombreUsuario);
