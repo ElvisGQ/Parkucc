@@ -1,5 +1,7 @@
 package com.example.parkucc.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,7 +41,9 @@ public class HomeFragment extends Fragment {
     private int availableSpaces = 0;
     private Button[] buttons;
     private ImageView[] cars;
+    private boolean isGuardiaRole = false; // Bandera para verificar si es un guardia
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -49,6 +53,11 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         availableSpaces = 0;
+
+        // Recuperar rol del usuario
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+        String userRole = sharedPreferences.getString("userRole", "");
+        isGuardiaRole = userRole.equals("Guardia"); // Verificar si el rol es "Guardia"
 
         Button refresh = binding.refresh;
         TextView espacios_libres = binding.espaciosLibres;
@@ -87,6 +96,10 @@ public class HomeFragment extends Fragment {
 
         // Asignar listeners a los botones
         View.OnClickListener buttonClickListener = v -> {
+            if (isGuardiaRole) {
+                Toast.makeText(requireContext(), "Los guardias no pueden realizar reservaciones.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             for (int i = 0; i < buttons.length; i++) {
                 if (v.getId() == buttons[i].getId()) {
                     if (cars[i].getVisibility() == View.VISIBLE) {
@@ -102,6 +115,10 @@ public class HomeFragment extends Fragment {
 
         for (Button button : buttons) {
             button.setOnClickListener(buttonClickListener);
+            if (isGuardiaRole) {
+                button.setEnabled(false); // Deshabilitar botones para los guardias
+                button.setAlpha(0.5f); // Mostrar botones deshabilitados de forma visual
+            }
         }
 
         return root;
@@ -133,11 +150,17 @@ public class HomeFragment extends Fragment {
 
                                     if (idEspacio >= 1 && idEspacio <= 10) {
                                         int index = idEspacio - 1;
+
                                         if ("Disponible".equals(disponibilidad)) {
                                             availableSpaces++;
                                             cars[index].setVisibility(View.INVISIBLE);
-                                            buttons[index].setEnabled(true);
-                                            buttons[index].setAlpha(0.0f); // Botón invisible
+                                            if (isGuardiaRole) {
+                                                buttons[index].setEnabled(false);
+                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible
+                                            }   else {
+                                                buttons[index].setEnabled(true);
+                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible para otros roles
+                                            }
                                         } else if ("Ocupado".equals(disponibilidad)) {
                                             cars[index].setVisibility(View.VISIBLE);
                                             buttons[index].setEnabled(false);
@@ -165,6 +188,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+
     private void showPopup(String carInfo) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View popupView = inflater.inflate(R.layout.popup_layout, null);
@@ -188,7 +212,11 @@ public class HomeFragment extends Fragment {
 
         reserveButton.setOnClickListener(v -> {
             String espacio = carInfo.replaceAll("[^\\d]", "");
-            String nombre = "UsuarioDemo";
+
+            // Recuperar el nombre del usuario desde SharedPreferences
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+            String nombre = sharedPreferences.getString("userName", "UsuarioDemo");
+
             String fechaFin = getCurrentDateTimePlus30Minutes();
 
             makeReservation(espacio, nombre, fechaFin, popupWindow);
@@ -230,7 +258,6 @@ public class HomeFragment extends Fragment {
                             if (status == 200) {
                                 Toast.makeText(requireContext(), "Reservación exitosa", Toast.LENGTH_SHORT).show();
                                 popupWindow.dismiss();
-                                // Cambiar opacidad del botón
                                 int index = Integer.parseInt(espacio) - 1;
                                 buttons[index].setAlpha(0.5f);
                                 buttons[index].setEnabled(false);

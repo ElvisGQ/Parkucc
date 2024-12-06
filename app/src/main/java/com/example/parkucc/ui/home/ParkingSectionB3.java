@@ -1,5 +1,7 @@
 package com.example.parkucc.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,6 +40,7 @@ public class ParkingSectionB3 extends Fragment {
     private int availableSpaces = 0;
     private Button[] buttons;
     private ImageView[] cars;
+    private boolean isGuardRole;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -46,6 +49,11 @@ public class ParkingSectionB3 extends Fragment {
         View root = binding.getRoot();
 
         availableSpaces = 0;
+
+        // Obtener el rol del usuario
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+        String userRole = sharedPreferences.getString("userRole", "");
+        isGuardRole = "Guardia".equals(userRole);
 
         // Navegación de regreso
         ImageView flechaSeccionB3haciaB2 = binding.flechaSeccionB3haciaB2;
@@ -57,6 +65,7 @@ public class ParkingSectionB3 extends Fragment {
         flechaSeccionB3haciaB4.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_parkingSectionB3_to_parkingSectionB4)
         );
+
         // Inicializar botones y carros
         buttons = new Button[]{
                 binding.buttonCar41, binding.buttonCar42, binding.buttonCar43,
@@ -76,23 +85,25 @@ public class ParkingSectionB3 extends Fragment {
         // Obtener datos y actualizar UI
         fetchParkingData(httpHelper);
 
-        // Asignar listeners a los botones
-        View.OnClickListener buttonClickListener = v -> {
-            for (int i = 0; i < buttons.length; i++) {
-                if (v.getId() == buttons[i].getId()) {
-                    if (cars[i].getVisibility() == View.VISIBLE) {
-                        Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
-                    } else {
-                        String carInfo = "B" + (i + 41);
-                        showPopup(carInfo);
+        // Asignar listeners a los botones (si no es guardia)
+        if (!isGuardRole) {
+            View.OnClickListener buttonClickListener = v -> {
+                for (int i = 0; i < buttons.length; i++) {
+                    if (v.getId() == buttons[i].getId()) {
+                        if (cars[i].getVisibility() == View.VISIBLE) {
+                            Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String carInfo = "B" + (i + 41);
+                            showPopup(carInfo);
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
-        };
+            };
 
-        for (Button button : buttons) {
-            button.setOnClickListener(buttonClickListener);
+            for (Button button : buttons) {
+                button.setOnClickListener(buttonClickListener);
+            }
         }
 
         return root;
@@ -127,12 +138,17 @@ public class ParkingSectionB3 extends Fragment {
                                         if ("Disponible".equals(disponibilidad)) {
                                             availableSpaces++;
                                             cars[index].setVisibility(View.INVISIBLE);
-                                            buttons[index].setEnabled(true);
-                                            buttons[index].setAlpha(0.0f); // Botón invisible
+                                            if (isGuardRole) {
+                                                buttons[index].setEnabled(false);
+                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible
+                                            } else {
+                                                buttons[index].setEnabled(true);
+                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible para otros roles
+                                            }
                                         } else if ("Ocupado".equals(disponibilidad)) {
                                             cars[index].setVisibility(View.VISIBLE);
                                             buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.0f); // Botón invisible
+                                            buttons[index].setAlpha(0.0f); // Botón completamente invisible
                                         } else if ("Reservado".equals(disponibilidad)) {
                                             cars[index].setVisibility(View.INVISIBLE);
                                             buttons[index].setEnabled(false);
@@ -179,7 +195,8 @@ public class ParkingSectionB3 extends Fragment {
 
         reserveButton.setOnClickListener(v -> {
             String espacio = carInfo.replaceAll("[^\\d]", "");
-            String nombre = "UsuarioDemo";
+            String nombre = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+                    .getString("userName", "UsuarioDemo");
             String fechaFin = getCurrentDateTimePlus30Minutes();
 
             makeReservation(espacio, nombre, fechaFin, popupWindow);
@@ -222,7 +239,7 @@ public class ParkingSectionB3 extends Fragment {
                                 Toast.makeText(requireContext(), "Reservación exitosa", Toast.LENGTH_SHORT).show();
                                 popupWindow.dismiss();
                                 int index = Integer.parseInt(espacio) - 41;
-                                buttons[index].setAlpha(0.5f); // Botón semitransparente
+                                buttons[index].setAlpha(0.5f);
                                 buttons[index].setEnabled(false);
                             } else if (status == 409) {
                                 Toast.makeText(requireContext(), "Espacio ocupado en el tiempo especificado", Toast.LENGTH_SHORT).show();
