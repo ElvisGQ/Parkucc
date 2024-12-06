@@ -39,7 +39,7 @@ public class Login extends AppCompatActivity {
     Button login_btn;
     EditText email_input, password_input;
     private Toast mToast = null;
-    TextView sign_up_link;
+    TextView sign_up_link, reset_password_link;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,17 @@ public class Login extends AppCompatActivity {
         email_input = findViewById(R.id.email_input);
         password_input = findViewById(R.id.password_input);
         sign_up_link = findViewById(R.id.sign_up_link);
+        reset_password_link = findViewById((R.id.reset_password_link));
+
+        reset_password_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Login.this, ForgotPassword.class);
+                startActivity(intent);
+
+            }
+        });
 
         sign_up_link.setOnClickListener(new View.OnClickListener() {
             @Override
