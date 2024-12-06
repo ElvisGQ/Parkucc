@@ -48,6 +48,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+        
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (isLoggedIn) {
