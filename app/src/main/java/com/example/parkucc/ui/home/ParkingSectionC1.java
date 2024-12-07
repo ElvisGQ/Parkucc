@@ -182,7 +182,9 @@ public class ParkingSectionC1 extends Fragment {
         Button closeButton = popupView.findViewById(R.id.close_button);
         Button reserveButton = popupView.findViewById(R.id.reserve_button);
 
-        titleText.setText("Lugar: " + carInfo);
+        // Extraer el número de carInfo, restarle 100 y actualizar el texto
+        int carNumber = Integer.parseInt(carInfo.replaceAll("[^\\d]", "")) - 100;
+        titleText.setText("Lugar: C" + carNumber);
 
         PopupWindow popupWindow = new PopupWindow(
                 popupView,

@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.Call;
@@ -90,8 +91,12 @@ public class ParkingSectionA2 extends Fragment {
                         if (cars[i].getVisibility() == View.VISIBLE) {
                             Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
                         } else {
-                            String carInfo = "A" + (i + 11);
-                            showPopup(carInfo);
+                            // Verificar si el usuario tiene una reservación activa antes de mostrar el popup
+                            int finalI = i;
+                            checkActiveReservation(() -> {
+                                String carInfo = "A" + (finalI + 11);
+                                showPopup(carInfo);
+                            });
                         }
                         break;
                     }
@@ -151,7 +156,6 @@ public class ParkingSectionA2 extends Fragment {
                                             buttons[index].setEnabled(false);
                                             buttons[index].setAlpha(0.5f); // Botón semitransparente
                                         }
-
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -165,6 +169,67 @@ public class ParkingSectionA2 extends Fragment {
                     }
                 } else {
                     response.close();
+                }
+            }
+        });
+    }
+
+    private void checkActiveReservation(Runnable onNoActiveReservation) {
+        OkHttpHelper httpHelper = new OkHttpHelper();
+        httpHelper.get("http://157.230.232.203/getReservaciones", new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                requireActivity().runOnUiThread(onNoActiveReservation::run);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+
+                    try {
+                        JSONArray reservaciones = new JSONArray(responseBody);
+
+                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+                        String currentUser = sharedPreferences.getString("userName", "");
+
+                        boolean hasActiveReservation = false;
+
+                        for (int i = 0; i < reservaciones.length(); i++) {
+                            JSONObject reservacion = reservaciones.getJSONObject(i);
+
+                            String userName = reservacion.getString("nombre_usuario");
+                            String fechaFin = reservacion.getString("fecha_fin");
+
+                            if (userName.equals(currentUser)) {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                Date fechaFinDate = sdf.parse(fechaFin);
+                                Date currentDate = new Date();
+
+                                if (fechaFinDate != null && fechaFinDate.after(currentDate)) {
+                                    hasActiveReservation = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        boolean finalHasActiveReservation = hasActiveReservation;
+                        requireActivity().runOnUiThread(() -> {
+                            if (finalHasActiveReservation) {
+                                Toast.makeText(requireContext(), "Ya tienes una reservación activa. No puedes realizar otra.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                onNoActiveReservation.run();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        requireActivity().runOnUiThread(onNoActiveReservation::run);
+                    }
+                } else {
+                    response.close();
+                    requireActivity().runOnUiThread(onNoActiveReservation::run);
                 }
             }
         });

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.Call;
@@ -41,7 +42,7 @@ public class HomeFragment extends Fragment {
     private int availableSpaces = 0;
     private Button[] buttons;
     private ImageView[] cars;
-    private boolean isGuardiaRole = false; // Bandera para verificar si es un guardia
+    private boolean isGuardiaRole = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,15 +55,13 @@ public class HomeFragment extends Fragment {
 
         availableSpaces = 0;
 
-        // Recuperar rol del usuario
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
         String userRole = sharedPreferences.getString("userRole", "");
-        isGuardiaRole = userRole.equals("Guardia"); // Verificar si el rol es "Guardia"
+        isGuardiaRole = userRole.equals("Guardia");
 
         Button refresh = binding.refresh;
         TextView espacios_libres = binding.espaciosLibres;
 
-        // Navegación entre secciones
         ImageView flechaSeccionA1haciaA2 = binding.flechaSeccionA1haciaA2;
         flechaSeccionA1haciaA2.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_parkingSectionA2)
@@ -72,7 +71,6 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_parkingSectionB1)
         );
 
-        // Inicializar botones y carros
         buttons = new Button[]{
                 binding.buttonCar1, binding.buttonCar2, binding.buttonCar3,
                 binding.buttonCar4, binding.buttonCar5, binding.buttonCar6,
@@ -87,14 +85,10 @@ public class HomeFragment extends Fragment {
         };
 
         OkHttpHelper httpHelper = new OkHttpHelper();
-
-        // Obtener datos y actualizar UI
         fetchParkingData(httpHelper, espacios_libres);
 
-        // Botón para recargar los datos
         refresh.setOnClickListener(view -> fetchParkingData(httpHelper, espacios_libres));
 
-        // Asignar listeners a los botones
         View.OnClickListener buttonClickListener = v -> {
             if (isGuardiaRole) {
                 Toast.makeText(requireContext(), "Los guardias no pueden realizar reservaciones.", Toast.LENGTH_SHORT).show();
@@ -105,8 +99,11 @@ public class HomeFragment extends Fragment {
                     if (cars[i].getVisibility() == View.VISIBLE) {
                         Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
                     } else {
-                        String carInfo = "A" + (i + 1);
-                        showPopup(carInfo);
+                        int finalI = i;
+                        checkActiveReservation(() -> {
+                            String carInfo = "A" + (finalI + 1);
+                            showPopup(carInfo);
+                        });
                     }
                     break;
                 }
@@ -116,8 +113,8 @@ public class HomeFragment extends Fragment {
         for (Button button : buttons) {
             button.setOnClickListener(buttonClickListener);
             if (isGuardiaRole) {
-                button.setEnabled(false); // Deshabilitar botones para los guardias
-                button.setAlpha(0.5f); // Mostrar botones deshabilitados de forma visual
+                button.setEnabled(false);
+                button.setAlpha(0.5f);
             }
         }
 
@@ -156,19 +153,19 @@ public class HomeFragment extends Fragment {
                                             cars[index].setVisibility(View.INVISIBLE);
                                             if (isGuardiaRole) {
                                                 buttons[index].setEnabled(false);
-                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible
-                                            }   else {
+                                                buttons[index].setAlpha(0.0f);
+                                            } else {
                                                 buttons[index].setEnabled(true);
-                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible para otros roles
+                                                buttons[index].setAlpha(0.0f);
                                             }
                                         } else if ("Ocupado".equals(disponibilidad)) {
                                             cars[index].setVisibility(View.VISIBLE);
                                             buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.0f); // Botón invisible
+                                            buttons[index].setAlpha(0.0f);
                                         } else if ("Reservado".equals(disponibilidad)) {
                                             cars[index].setVisibility(View.INVISIBLE);
                                             buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.5f); // Botón semitransparente
+                                            buttons[index].setAlpha(0.5f);
                                         }
                                     }
                                 } catch (JSONException e) {
@@ -185,6 +182,72 @@ public class HomeFragment extends Fragment {
                     response.close();
                 }
             }
+        });
+    }
+
+    private void checkActiveReservation(Runnable onNoActiveReservation) {
+        OkHttpHelper httpHelper = new OkHttpHelper();
+        httpHelper.get("http://157.230.232.203/getReservaciones", new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), "No se pudo verificar reservaciones. Continuando...", Toast.LENGTH_SHORT).show();
+                    onNoActiveReservation.run(); // Permitir que el usuario continúe si hay un error
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    response.close();
+
+                    try {
+                        JSONArray reservaciones = new JSONArray(responseBody);
+
+                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+                        String currentUser = sharedPreferences.getString("userName", "");
+
+                        boolean hasActiveReservation = false;
+
+                        for (int i = 0; i < reservaciones.length(); i++) {
+                            JSONObject reservacion = reservaciones.getJSONObject(i);
+
+                            String userName = reservacion.getString("nombre_usuario");
+                            String fechaFin = reservacion.getString("fecha_fin");
+
+                            if (userName.equals(currentUser)) {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                Date fechaFinDate = sdf.parse(fechaFin);
+                                Date currentDate = new Date();
+
+                                if (fechaFinDate != null && fechaFinDate.after(currentDate)) {
+                                    hasActiveReservation = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        boolean finalHasActiveReservation = hasActiveReservation;
+                        requireActivity().runOnUiThread(() -> {
+                            if (finalHasActiveReservation) {
+                                Toast.makeText(requireContext(), "Ya tienes una reservación activa. No puedes realizar otra.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                onNoActiveReservation.run();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        requireActivity().runOnUiThread(onNoActiveReservation::run);
+                    }
+                } else {
+                    response.close();
+                    requireActivity().runOnUiThread(onNoActiveReservation::run);
+                }
+            }
+
         });
     }
 
@@ -213,7 +276,6 @@ public class HomeFragment extends Fragment {
         reserveButton.setOnClickListener(v -> {
             String espacio = carInfo.replaceAll("[^\\d]", "");
 
-            // Recuperar el nombre del usuario desde SharedPreferences
             SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
             String nombre = sharedPreferences.getString("userName", "UsuarioDemo");
 
