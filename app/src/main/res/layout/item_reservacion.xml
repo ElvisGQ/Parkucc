@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvEspacio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Espacio"
+        android:textColor="#1E90FF"
+        android:fontFamily="@font/geologica_medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvNombreUsuario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/geologica_regular"
+        android:text="Nombre Usuario" />
+
+    <TextView
+        android:id="@+id/tvFechaInicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/geologica_regular"
+        android:text="Fecha Inicio" />
+
+    <TextView
+        android:id="@+id/tvFechaFin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/geologica_regular"
+        android:text="Fecha Fin" />
+</LinearLayout>
+
