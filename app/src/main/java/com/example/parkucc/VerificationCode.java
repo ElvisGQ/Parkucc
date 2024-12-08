@@ -24,6 +24,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -144,41 +145,55 @@ public class VerificationCode extends AppCompatActivity {
 
                                 if (statusCode == 200) {
 
-                                    // Create the second request here
-                                    JSONObject secondPostData = new JSONObject();
                                     try {
-                                        secondPostData.put("id_rol", 1);
-                                        secondPostData.put("nombre", username);
-                                        secondPostData.put("correo", email);
-                                        secondPostData.put("contrasena", password);
-                                    } catch (Exception e) {
+                                        // Parse the JSON response
+                                        JSONObject jsonResponse = new JSONObject(responseBody);
+
+                                        // Extract the "status" field
+                                        int status = jsonResponse.getInt("status");
+
+                                        if (status == 200) {
+                                            // Create the second request here
+                                            JSONObject secondPostData = new JSONObject();
+                                            try {
+                                                secondPostData.put("id_rol", 1);
+                                                secondPostData.put("nombre", username);
+                                                secondPostData.put("correo", email);
+                                                secondPostData.put("contrasena", password);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            // Make the second request
+                                            httpHelper.post("http://157.230.232.203/usuarios", secondPostData, new Callback() {
+                                                @Override
+                                                public void onFailure(Call call, IOException e) {
+                                                    // Handle failure of the second request
+                                                    e.printStackTrace();
+                                                }
+
+                                                @Override
+                                                public void onResponse(Call call, Response response) throws IOException {
+
+                                                }
+                                            });
+
+                                            verify_btn.setEnabled(false);
+                                            cancelar.setEnabled(false);
+
+                                            runOnUiThread(() -> {
+                                                imageView8.setVisibility(View.VISIBLE);
+                                                imageView7.setVisibility(View.VISIBLE);
+                                                popupIcon.setVisibility(View.VISIBLE);
+                                                continuarBtn.setVisibility(View.VISIBLE);
+                                                popupMessage.setVisibility(View.VISIBLE);
+                                            });
+                                        }else {
+                                            runOnUiThread(() -> showToast("Token no válido"));
+                                        }
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-
-                                    // Make the second request
-                                    httpHelper.post("http://157.230.232.203/usuarios", secondPostData, new Callback() {
-                                        @Override
-                                        public void onFailure(Call call, IOException e) {
-                                            // Handle failure of the second request
-                                            e.printStackTrace();
-                                        }
-
-                                        @Override
-                                        public void onResponse(Call call, Response response) throws IOException {
-
-                                        }
-                                    });
-
-                                    verify_btn.setEnabled(false);
-                                    cancelar.setEnabled(false);
-
-                                    runOnUiThread(() -> {
-                                        imageView8.setVisibility(View.VISIBLE);
-                                        imageView7.setVisibility(View.VISIBLE);
-                                        popupIcon.setVisibility(View.VISIBLE);
-                                        continuarBtn.setVisibility(View.VISIBLE);
-                                        popupMessage.setVisibility(View.VISIBLE);
-                                    });
 
                                 }
                                 else {
