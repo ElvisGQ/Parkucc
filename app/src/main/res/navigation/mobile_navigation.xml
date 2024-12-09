@@ -189,9 +189,25 @@
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
+    <!-- Sección de Notificaciones-->
+
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.parkucc.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications">
+    <action
+        android:id="@+id/action_notifications_to_users"
+        app:destination="@id/usersFragment" />
+    </fragment>
+    <!-- Sección de USUARIOS -->
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.example.parkucc.ui.notifications.FragmentUsers"
+        android:label="Gestión de Usuarios"
+        tools:layout="@layout/fragment_users">
+        <action
+            android:id="@+id/action_users_to_notifications"
+            app:destination="@id/navigation_notifications" />
+    </fragment>
 </navigation>

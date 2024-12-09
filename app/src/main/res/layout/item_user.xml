@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre"
+        android:textStyle="bold"
+        android:textColor="#1E90FF"
+        android:textSize="16sp"
+        android:paddingBottom="4dp" />
+
+    <TextView
+        android:id="@+id/tvCorreo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Correo"
+        android:paddingBottom="4dp" />
+
+    <TextView
+        android:id="@+id/tvRol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rol"
+        android:paddingBottom="4dp" />
+
+    <TextView
+        android:id="@+id/tvIdUsuario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID Usuario" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/btnAsignarGuardia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asignar Guardia"
+            android:layout_margin="8dp"
+            android:backgroundTint="#1E90FF"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/btnAsignarEstudiante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asignar Estudiante"
+            android:layout_margin="8dp"
+            android:backgroundTint="#1E90FF"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</LinearLayout>

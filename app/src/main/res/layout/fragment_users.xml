@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="78dp"
+        android:paddingStart="30dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/flechaDeregreso"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="Flecha para regresar"
+            android:src="@drawable/icono_regreso"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/geologica_semibold"
+            android:text="Usuarios"
+            android:textColor="#1E90FF"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="550dp"
+        android:paddingTop="20dp"
+        android:paddingStart="30dp"
+        />
+</LinearLayout>
