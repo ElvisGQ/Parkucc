@@ -45,8 +45,7 @@ public class HomeFragment extends Fragment {
     private boolean isGuardiaRole = false;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -139,41 +138,43 @@ public class HomeFragment extends Fragment {
                     try {
                         JSONArray jsonArray = new JSONArray(responseBody);
                         requireActivity().runOnUiThread(() -> {
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                try {
-                                    JSONObject espacioObject = jsonArray.getJSONObject(i);
-                                    int idEspacio = espacioObject.getInt("id_espacio");
-                                    String disponibilidad = espacioObject.getString("disponibilidad");
+                            if (binding != null && isAdded()) { // Validación de binding y estado del fragmento
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    try {
+                                        JSONObject espacioObject = jsonArray.getJSONObject(i);
+                                        int idEspacio = espacioObject.getInt("id_espacio");
+                                        String disponibilidad = espacioObject.getString("disponibilidad");
 
-                                    if (idEspacio >= 1 && idEspacio <= 10) {
-                                        int index = idEspacio - 1;
+                                        if (idEspacio >= 1 && idEspacio <= 10) {
+                                            int index = idEspacio - 1;
 
-                                        if ("Disponible".equals(disponibilidad)) {
-                                            availableSpaces++;
-                                            cars[index].setVisibility(View.INVISIBLE);
-                                            if (isGuardiaRole) {
+                                            if ("Disponible".equals(disponibilidad)) {
+                                                availableSpaces++;
+                                                cars[index].setVisibility(View.INVISIBLE);
+                                                if (isGuardiaRole) {
+                                                    buttons[index].setEnabled(false);
+                                                    buttons[index].setAlpha(0.0f);
+                                                } else {
+                                                    buttons[index].setEnabled(true);
+                                                    buttons[index].setAlpha(0.0f);
+                                                }
+                                            } else if ("Ocupado".equals(disponibilidad)) {
+                                                cars[index].setVisibility(View.VISIBLE);
                                                 buttons[index].setEnabled(false);
                                                 buttons[index].setAlpha(0.0f);
-                                            } else {
-                                                buttons[index].setEnabled(true);
-                                                buttons[index].setAlpha(0.0f);
+                                            } else if ("Reservado".equals(disponibilidad)) {
+                                                cars[index].setVisibility(View.INVISIBLE);
+                                                buttons[index].setEnabled(false);
+                                                buttons[index].setAlpha(0.5f);
                                             }
-                                        } else if ("Ocupado".equals(disponibilidad)) {
-                                            cars[index].setVisibility(View.VISIBLE);
-                                            buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.0f);
-                                        } else if ("Reservado".equals(disponibilidad)) {
-                                            cars[index].setVisibility(View.INVISIBLE);
-                                            buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.5f);
                                         }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
                                 }
-                            }
 
-                            espacios_libres.setText(availableSpaces + " ESPACIOS LIBRES");
+                                espacios_libres.setText(availableSpaces + " ESPACIOS LIBRES");
+                            }
                         });
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -193,7 +194,7 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(requireContext(), "No se pudo verificar reservaciones. Continuando...", Toast.LENGTH_SHORT).show();
-                    onNoActiveReservation.run(); // Permitir que el usuario continúe si hay un error
+                    onNoActiveReservation.run();
                 });
             }
 
@@ -232,7 +233,7 @@ public class HomeFragment extends Fragment {
                         boolean finalHasActiveReservation = hasActiveReservation;
                         requireActivity().runOnUiThread(() -> {
                             if (finalHasActiveReservation) {
-                                Toast.makeText(requireContext(), "Ya tienes una reservación activa. No puedes realizar otra.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Ya tienes una reservación activa.", Toast.LENGTH_SHORT).show();
                             } else {
                                 onNoActiveReservation.run();
                             }
@@ -247,10 +248,8 @@ public class HomeFragment extends Fragment {
                     requireActivity().runOnUiThread(onNoActiveReservation::run);
                 }
             }
-
         });
     }
-
 
     private void showPopup(String carInfo) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());

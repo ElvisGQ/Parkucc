@@ -44,7 +44,7 @@ public class ParkingSectionA2 extends Fragment {
     private boolean isGuardRole;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentParkingSectionA2Binding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -91,7 +91,6 @@ public class ParkingSectionA2 extends Fragment {
                         if (cars[i].getVisibility() == View.VISIBLE) {
                             Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
                         } else {
-                            // Verificar si el usuario tiene una reservación activa antes de mostrar el popup
                             int finalI = i;
                             checkActiveReservation(() -> {
                                 String carInfo = "A" + (finalI + 11);
@@ -129,40 +128,42 @@ public class ParkingSectionA2 extends Fragment {
                     try {
                         JSONArray jsonArray = new JSONArray(responseBody);
                         requireActivity().runOnUiThread(() -> {
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                try {
-                                    JSONObject espacioObject = jsonArray.getJSONObject(i);
-                                    int idEspacio = espacioObject.getInt("id_espacio");
-                                    String disponibilidad = espacioObject.getString("disponibilidad");
+                            if (binding != null && isAdded()) { // Validación de binding y fragmento activo
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    try {
+                                        JSONObject espacioObject = jsonArray.getJSONObject(i);
+                                        int idEspacio = espacioObject.getInt("id_espacio");
+                                        String disponibilidad = espacioObject.getString("disponibilidad");
 
-                                    if (idEspacio >= 11 && idEspacio <= 20) {
-                                        int index = idEspacio - 11;
-                                        if ("Disponible".equals(disponibilidad)) {
-                                            availableSpaces++;
-                                            cars[index].setVisibility(View.INVISIBLE);
-                                            if (isGuardRole) {
+                                        if (idEspacio >= 11 && idEspacio <= 20) {
+                                            int index = idEspacio - 11;
+                                            if ("Disponible".equals(disponibilidad)) {
+                                                availableSpaces++;
+                                                cars[index].setVisibility(View.INVISIBLE);
+                                                if (isGuardRole) {
+                                                    buttons[index].setEnabled(false);
+                                                    buttons[index].setAlpha(0.0f);
+                                                } else {
+                                                    buttons[index].setEnabled(true);
+                                                    buttons[index].setAlpha(0.0f);
+                                                }
+                                            } else if ("Ocupado".equals(disponibilidad)) {
+                                                cars[index].setVisibility(View.VISIBLE);
                                                 buttons[index].setEnabled(false);
-                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible
-                                            } else {
-                                                buttons[index].setEnabled(true);
-                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible para otros roles
+                                                buttons[index].setAlpha(0.0f);
+                                            } else if ("Reservado".equals(disponibilidad)) {
+                                                cars[index].setVisibility(View.INVISIBLE);
+                                                buttons[index].setEnabled(false);
+                                                buttons[index].setAlpha(0.5f);
                                             }
-                                        } else if ("Ocupado".equals(disponibilidad)) {
-                                            cars[index].setVisibility(View.VISIBLE);
-                                            buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.0f); // Botón completamente invisible
-                                        } else if ("Reservado".equals(disponibilidad)) {
-                                            cars[index].setVisibility(View.INVISIBLE);
-                                            buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.5f); // Botón semitransparente
                                         }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
                                 }
-                            }
 
-                            binding.espaciosLibres.setText(availableSpaces + " ESPACIOS LIBRES");
+                                binding.espaciosLibres.setText(availableSpaces + " ESPACIOS LIBRES");
+                            }
                         });
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -217,7 +218,7 @@ public class ParkingSectionA2 extends Fragment {
                         boolean finalHasActiveReservation = hasActiveReservation;
                         requireActivity().runOnUiThread(() -> {
                             if (finalHasActiveReservation) {
-                                Toast.makeText(requireContext(), "Ya tienes una reservación activa. No puedes realizar otra.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Ya tienes una reservación activa.", Toast.LENGTH_SHORT).show();
                             } else {
                                 onNoActiveReservation.run();
                             }

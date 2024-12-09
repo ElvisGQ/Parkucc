@@ -54,7 +54,7 @@ public class ParkingSectionB8 extends Fragment {
         String userRole = sharedPreferences.getString("userRole", "");
         isGuardRole = "Guardia".equals(userRole);
 
-        // Navegación entre secciones
+        // Configurar navegación entre secciones
         ImageView flechaSeccionB8haciaB7 = binding.flechaSeccionB8haciaB7;
         flechaSeccionB8haciaB7.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_parkingSectionB8_to_parkingSectionB7)
@@ -64,7 +64,7 @@ public class ParkingSectionB8 extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_parkingSectionB8_to_parkingSectionC1)
         );
 
-        // Inicializar botones y carros para los espacios 91 al 100
+        // Inicializar botones y carros
         buttons = new Button[]{
                 binding.buttonCar91, binding.buttonCar92, binding.buttonCar93,
                 binding.buttonCar94, binding.buttonCar95, binding.buttonCar96,
@@ -81,10 +81,13 @@ public class ParkingSectionB8 extends Fragment {
 
         OkHttpHelper httpHelper = new OkHttpHelper();
 
-        // Obtener datos del servidor y actualizar UI
+        // Obtener datos del servidor
         fetchParkingData(httpHelper);
 
-        // Listener para los botones (si no es guardia)
+        // Listener para recargar datos
+        binding.refresh.setOnClickListener(view -> fetchParkingData(httpHelper));
+
+        // Configurar clics en los botones (si no es guardia)
         if (!isGuardRole) {
             View.OnClickListener buttonClickListener = v -> {
                 for (int i = 0; i < buttons.length; i++) {
@@ -93,7 +96,7 @@ public class ParkingSectionB8 extends Fragment {
                             Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
                         } else {
                             String carInfo = "B" + getCarNumber(i);
-                            showPopup(carInfo);
+                            checkActiveReservation(() -> showPopup(carInfo));
                         }
                         break;
                     }
@@ -104,9 +107,6 @@ public class ParkingSectionB8 extends Fragment {
                 button.setOnClickListener(buttonClickListener);
             }
         }
-
-        // Listener para recargar los datos
-        binding.refresh.setOnClickListener(view -> fetchParkingData(httpHelper));
 
         return root;
     }
@@ -129,6 +129,8 @@ public class ParkingSectionB8 extends Fragment {
                     try {
                         JSONArray jsonArray = new JSONArray(responseBody);
                         requireActivity().runOnUiThread(() -> {
+                            if (!isAdded() || binding == null) return;
+
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 try {
                                     JSONObject espacioObject = jsonArray.getJSONObject(i);
@@ -140,21 +142,16 @@ public class ParkingSectionB8 extends Fragment {
                                         if ("Disponible".equals(disponibilidad)) {
                                             availableSpaces++;
                                             cars[index].setVisibility(View.INVISIBLE);
-                                            if (isGuardRole) {
-                                                buttons[index].setEnabled(false);
-                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible
-                                            } else {
-                                                buttons[index].setEnabled(true);
-                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible para otros roles
-                                            }
+                                            buttons[index].setEnabled(true);
+                                            buttons[index].setAlpha(0.0f);
                                         } else if ("Ocupado".equals(disponibilidad)) {
                                             cars[index].setVisibility(View.VISIBLE);
                                             buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.0f); // Botón completamente invisible
+                                            buttons[index].setAlpha(0.0f);
                                         } else if ("Reservado".equals(disponibilidad)) {
                                             cars[index].setVisibility(View.INVISIBLE);
                                             buttons[index].setEnabled(false);
-                                            buttons[index].setAlpha(0.5f); // Botón semitransparente
+                                            buttons[index].setAlpha(0.5f);
                                         }
                                     }
                                 } catch (JSONException e) {
@@ -174,6 +171,67 @@ public class ParkingSectionB8 extends Fragment {
         });
     }
 
+    private void checkActiveReservation(Runnable onNoActiveReservation) {
+        OkHttpHelper httpHelper = new OkHttpHelper();
+        httpHelper.get("http://157.230.232.203/getReservaciones", new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                requireActivity().runOnUiThread(onNoActiveReservation::run);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    response.close();
+
+                    try {
+                        JSONArray reservaciones = new JSONArray(responseBody);
+
+                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+                        String currentUser = sharedPreferences.getString("userName", "");
+
+                        boolean hasActiveReservation = false;
+
+                        for (int i = 0; i < reservaciones.length(); i++) {
+                            JSONObject reservacion = reservaciones.getJSONObject(i);
+                            String userName = reservacion.getString("nombre_usuario");
+                            String fechaFin = reservacion.getString("fecha_fin");
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                            Calendar currentDate = Calendar.getInstance();
+                            Calendar endDate = Calendar.getInstance();
+                            endDate.setTime(sdf.parse(fechaFin));
+
+                            if (userName.equals(currentUser) && endDate.after(currentDate)) {
+                                hasActiveReservation = true;
+                                break;
+                            }
+                        }
+
+                        final boolean finalHasActiveReservation = hasActiveReservation;
+
+                        requireActivity().runOnUiThread(() -> {
+                            if (finalHasActiveReservation) {
+                                Toast.makeText(requireContext(), "Ya tienes una reservación activa.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                onNoActiveReservation.run();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        requireActivity().runOnUiThread(onNoActiveReservation::run);
+                    }
+                } else {
+                    response.close();
+                    requireActivity().runOnUiThread(onNoActiveReservation::run);
+                }
+            }
+        });
+    }
+
     private void showPopup(String carInfo) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View popupView = inflater.inflate(R.layout.popup_layout, null);
@@ -182,7 +240,6 @@ public class ParkingSectionB8 extends Fragment {
         Button closeButton = popupView.findViewById(R.id.close_button);
         Button reserveButton = popupView.findViewById(R.id.reserve_button);
 
-        // Extraer el número de carInfo, restarle 20 y actualizar el texto
         int carNumber = Integer.parseInt(carInfo.replaceAll("[^\\d]", "")) - 20;
         titleText.setText("Lugar: B" + carNumber);
 
@@ -265,7 +322,7 @@ public class ParkingSectionB8 extends Fragment {
     private String getCurrentDateTimePlus30Minutes() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 30); // Agregar 30 minutos
+        calendar.add(Calendar.MINUTE, 30);
         return sdf.format(calendar.getTime());
     }
 

@@ -385,7 +385,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.807"
+        app:layout_constraintHorizontal_bias="0.6"
         android:rotation="90"
+        tools:layout_editor_absoluteY="526dp" />
+    <ImageView
+        android:id="@+id/flechaSeccionC2haciaB7"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="Flecha para la siguiente sección"
+        android:src="@drawable/flecha"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.807"
+        app:layout_constraintHorizontal_bias="0.4"
+        android:rotation="270"
         tools:layout_editor_absoluteY="526dp" />
     <ImageView
         android:id="@+id/flechaSeccionC2haciaC1"

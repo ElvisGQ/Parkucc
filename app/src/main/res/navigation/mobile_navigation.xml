@@ -114,6 +114,9 @@
         <action
             android:id="@+id/action_parkingSectionB7_to_parkingSectionB8"
             app:destination="@id/nav_parking_sectionb8" />
+        <action
+            android:id="@+id/action_parkingSectionB7_to_parkingSectionB6"
+            app:destination="@id/nav_parking_sectionb6" />
     </fragment>
     <fragment
         android:id="@+id/nav_parking_sectionb8"
@@ -153,6 +156,9 @@
         <action
             android:id="@+id/action_parkingSectionC2_to_parkingSectionC3"
             app:destination="@id/nav_parking_sectionc3" />
+        <action
+            android:id="@+id/action_parkingSectionC2_to_parkingSectionB7"
+            app:destination="@id/nav_parking_sectionb7" />
     </fragment>
     <fragment
         android:id="@+id/nav_parking_sectionc3"

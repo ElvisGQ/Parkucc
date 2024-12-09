@@ -1,4 +1,5 @@
 package com.example.parkucc.ui.home;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.Call;
@@ -93,8 +95,11 @@ public class ParkingSectionB2 extends Fragment {
                         if (cars[i].getVisibility() == View.VISIBLE) {
                             Toast.makeText(requireContext(), "Este lugar está ocupado", Toast.LENGTH_SHORT).show();
                         } else {
-                            String carInfo = "B" + (i < 3 ? (i + 31) : (i + 32)); // Ajustar índice por el espacio 34
-                            showPopup(carInfo);
+                            int finalI = i;
+                            checkActiveReservation(() -> {
+                                String carInfo = "B" + (finalI < 3 ? (finalI + 31) : (finalI + 32));
+                                showPopup(carInfo);
+                            });
                         }
                         break;
                     }
@@ -127,6 +132,8 @@ public class ParkingSectionB2 extends Fragment {
                     try {
                         JSONArray jsonArray = new JSONArray(responseBody);
                         requireActivity().runOnUiThread(() -> {
+                            if (!isAdded() || binding == null) return; // Validación para evitar crashes
+
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 try {
                                     JSONObject espacioObject = jsonArray.getJSONObject(i);
@@ -142,19 +149,19 @@ public class ParkingSectionB2 extends Fragment {
                                                 cars[index].setVisibility(View.INVISIBLE);
                                                 if (isGuardRole) {
                                                     buttons[index].setEnabled(false);
-                                                    buttons[index].setAlpha(0.0f); // Botón completamente invisible
+                                                    buttons[index].setAlpha(0.0f);
                                                 } else {
                                                     buttons[index].setEnabled(true);
-                                                    buttons[index].setAlpha(0.0f); // Botón completamente invisible para otros roles
+                                                    buttons[index].setAlpha(0.0f);
                                                 }
                                             } else if ("Ocupado".equals(disponibilidad)) {
                                                 cars[index].setVisibility(View.VISIBLE);
                                                 buttons[index].setEnabled(false);
-                                                buttons[index].setAlpha(0.0f); // Botón completamente invisible
+                                                buttons[index].setAlpha(0.0f);
                                             } else if ("Reservado".equals(disponibilidad)) {
                                                 cars[index].setVisibility(View.INVISIBLE);
                                                 buttons[index].setEnabled(false);
-                                                buttons[index].setAlpha(0.5f); // Botón semitransparente
+                                                buttons[index].setAlpha(0.5f);
                                             }
                                         }
                                     }
@@ -176,6 +183,67 @@ public class ParkingSectionB2 extends Fragment {
         });
     }
 
+    private void checkActiveReservation(Runnable onNoActiveReservation) {
+        OkHttpHelper httpHelper = new OkHttpHelper();
+        httpHelper.get("http://157.230.232.203/getReservaciones", new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                requireActivity().runOnUiThread(onNoActiveReservation::run);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+
+                    try {
+                        JSONArray reservaciones = new JSONArray(responseBody);
+
+                        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+                        String currentUser = sharedPreferences.getString("userName", "");
+
+                        boolean hasActiveReservation = false;
+
+                        for (int i = 0; i < reservaciones.length(); i++) {
+                            JSONObject reservacion = reservaciones.getJSONObject(i);
+
+                            String userName = reservacion.getString("nombre_usuario");
+                            String fechaFin = reservacion.getString("fecha_fin");
+
+                            if (userName.equals(currentUser)) {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                                Date fechaFinDate = sdf.parse(fechaFin);
+                                Date currentDate = new Date();
+
+                                if (fechaFinDate != null && fechaFinDate.after(currentDate)) {
+                                    hasActiveReservation = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        boolean finalHasActiveReservation = hasActiveReservation;
+                        requireActivity().runOnUiThread(() -> {
+                            if (finalHasActiveReservation) {
+                                Toast.makeText(requireContext(), "Ya tienes una reservación activa.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                onNoActiveReservation.run();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        requireActivity().runOnUiThread(onNoActiveReservation::run);
+                    }
+                } else {
+                    response.close();
+                    requireActivity().runOnUiThread(onNoActiveReservation::run);
+                }
+            }
+        });
+    }
+
     private void showPopup(String carInfo) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View popupView = inflater.inflate(R.layout.popup_layout, null);
@@ -184,7 +252,6 @@ public class ParkingSectionB2 extends Fragment {
         Button closeButton = popupView.findViewById(R.id.close_button);
         Button reserveButton = popupView.findViewById(R.id.reserve_button);
 
-        // Extraer el número de carInfo, restarle 20 y actualizar el texto
         int carNumber = Integer.parseInt(carInfo.replaceAll("[^\\d]", "")) - 20;
         titleText.setText("Lugar: B" + carNumber);
 
@@ -204,7 +271,6 @@ public class ParkingSectionB2 extends Fragment {
             String nombre = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE)
                     .getString("userName", "UsuarioDemo");
             String fechaFin = getCurrentDateTimePlus30Minutes();
-
             makeReservation(espacio, nombre, fechaFin, popupWindow);
         });
     }
@@ -225,9 +291,8 @@ public class ParkingSectionB2 extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
-                });
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show());
             }
 
             @Override
@@ -258,9 +323,8 @@ public class ParkingSectionB2 extends Fragment {
                     }
                 } else {
                     response.close();
-                    requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Error del servidor", Toast.LENGTH_SHORT).show();
-                    });
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(requireContext(), "Error del servidor", Toast.LENGTH_SHORT).show());
                 }
             }
         });
@@ -269,7 +333,7 @@ public class ParkingSectionB2 extends Fragment {
     private String getCurrentDateTimePlus30Minutes() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 30); // Agregar 30 minutos
+        calendar.add(Calendar.MINUTE, 30);
         return sdf.format(calendar.getTime());
     }
 
