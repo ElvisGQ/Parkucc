@@ -147,7 +147,7 @@
         android:paddingStart="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
-        app:layout_constraintVertical_bias="0.216"
+        app:layout_constraintVertical_bias="0.016"
         tools:layout_editor_absoluteX="-16dp">
 
         <!-- Icon -->
@@ -170,20 +170,22 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         android:gravity="left"
         android:orientation="horizontal"
         android:padding="16dp"
         android:paddingStart="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="-39dp"
-        android:clickable="true"
-        android:focusable="true">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.022"
+        tools:layout_editor_absoluteX="16dp">
 
         <!-- Icono -->
         <ImageView
@@ -192,7 +194,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:paddingTop="5dp"
-            android:src="@drawable/person_profile"/>
+            android:src="@drawable/person_profile" />
 
         <!-- Texto -->
         <TextView
@@ -205,8 +207,6 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
-
-
 
     <TextView
         android:id="@+id/username"
