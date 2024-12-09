@@ -87,6 +87,22 @@
         app:boxBackgroundColor="@color/input_selected"
         app:layout_constraintVertical_bias="0.633"/>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/input_selected"
+        app:boxBackgroundColor="@color/input_selected"
+        app:boxStrokeErrorColor="@color/input_selected"
+        app:cursorColor="@color/input_selected"
+        app:hintTextColor="#1E90FF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.532" />
+
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -123,7 +139,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
@@ -132,8 +148,8 @@
         android:paddingStart="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintVertical_bias="0.216"
+        tools:layout_editor_absoluteX="-16dp">
 
         <!-- Icon -->
         <ImageView
@@ -155,6 +171,43 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:paddingStart="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="-39dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Icono -->
+        <ImageView
+            android:id="@+id/notis_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:paddingTop="5dp"
+            android:src="@drawable/notis_icon"/>
+
+        <!-- Texto -->
+        <TextView
+            android:id="@+id/notis_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/geologica_medium"
+            android:text="Notificación"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/username"
@@ -206,6 +259,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.7" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,11 +26,9 @@ public class NotificationsFragment extends Fragment {
     private FragmentNotificationsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         NotificationsViewModel notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-
         View root = binding.getRoot();
 
         TextView logoutText = binding.logoutText;
@@ -37,8 +36,8 @@ public class NotificationsFragment extends Fragment {
         TextView email = binding.email;
         TextView settingsText = binding.settingsText; // Referenciar el texto de configuración
 
+        // SharedPreferences para cargar datos del usuario
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-
         username.setText(sharedPreferences.getString("userName", ""));
         email.setText(sharedPreferences.getString("userEmail", ""));
 
@@ -65,22 +64,32 @@ public class NotificationsFragment extends Fragment {
         });
 
         // Listener para cerrar sesión
-        logoutText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        logoutText.setOnClickListener(view -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear(); // This clears all data in "UserSession".
+            editor.apply(); // Apply changes asynchronously.
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear(); // This clears all data in "UserSession".
-                editor.apply(); // Apply changes asynchronously.
+            Intent intent = new Intent(requireContext(), Login.class);
+            startActivity(intent);
+            requireActivity().finish();
+        });
 
-                Intent intent = new Intent(requireContext(), Login.class);
-                startActivity(intent);
-                requireActivity().finish();
-
-            }
+        // Listener para el botón de notificaciones
+        View notificationButton = binding.getRoot().findViewById(R.id.linearLayout3); // Referencia al LinearLayout de notificaciones
+        notificationButton.setOnClickListener(v -> {
+            // Mostrar las notificaciones (puedes sustituirlo con algo más complejo si es necesario)
+            showNotifications();
         });
 
         return root;
+    }
+
+    private void showNotifications() {
+        // Aquí puedes gestionar la lógica de las notificaciones.
+        // Para fines de ejemplo, vamos a usar un simple Toast:
+        Toast.makeText(getContext(), "Mostrando Notificaciones", Toast.LENGTH_SHORT).show();
+
+        // En un caso real, podrías abrir una nueva actividad o un fragmento con una lista de notificaciones, como un RecyclerView.
     }
 
     @Override
